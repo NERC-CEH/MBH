@@ -9,10 +9,14 @@
 #' @param dims Dimensions to plot
 #' @param col1 Colour to use for first hypervolume
 #' @param col2 Colour to use for second hypervolume
-#' @return Utilises a simulation based approach to calculate overlap by simulating a number of points from each hypervolume. Returns an overlap statistic defined by total number of points shared divided by total number of points simulated. The density of points in each hypervolume is kept constant. Can be very slow for large hypervolumes.
+#' @param proppoints Number of points to sample from each hypervolume calculated as a proportion of the total volume of each hypervolume. Defaults to 1 but consider reducing to reduce computation time
+#' @param ndraws Number of draws from multivariate normal used in overlap calculation. Defaults to 999. Reducing the number of draws will reduce computational time but will also reduce precision of the overlap estimate.
+#' @return Utilises a simulation based approach to calculate overlap by simulating a number of points from each hypervolume. Returns an overlap statistic defined by total number of points shared divided by total number of points simulated. The density of points in each hypervolume is kept constant. Can be very slow for large hypervolumes, both proppoints and ndraws could be reduced for faster computation but larger values will give more precise estimates.
 #' @export
 
-overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col1 = "black", col2 = "blue"){
+overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col1 = "black", col2 = "blue", proppoints = 1, ndraws = 999){
+
+  message("Start overlap calculation - this may take some time!")
 
   #extract volumes
 
@@ -51,12 +55,16 @@ overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col
 
   #simulate random points from each distribution
 
-  pnts_hv1 <- mvtnorm::rmvnorm(round(vol1), mean1, cov1, method = "eigen")
-  pnts_hv2 <- mvtnorm::rmvnorm(round(vol2), mean2, cov2, method = "eigen")
+  pnts_hv1 <- mvtnorm::rmvnorm(round(vol1*proppoints), mean1, cov1, method = "eigen")
+  pnts_hv2 <- mvtnorm::rmvnorm(round(vol2*proppoints), mean2, cov2, method = "eigen")
 
   #check if points are in each distribution
 
   #hv1 points in hv2
+
+  message("Test points from hypervolume 1 in hypervolume 2")
+  pb <- txtProgressBar(min = 0, max = nrow(pnts_hv1), style = 3)
+
 
   totestall <- pnts_hv1
   prob <- vector()
@@ -70,8 +78,8 @@ overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col
     #test new point against distribution
     prob <- min(mvtnorm::pmvnorm(upper = totest,sigma = tau, mean = mu),mvtnorm::pmvnorm(lower = totest,sigma = tau, mean = mu)*2)
 
-    #simulate 999 draws from multivariate dist
-    rsims <- pnts_hv2[sample(nrow(pnts_hv2), 99, replace = FALSE), ]
+    #simulate ndraws draws from multivariate dist
+    rsims <- pnts_hv2[sample(nrow(pnts_hv2), ndraws, replace = FALSE), ]
     #calculate p values for each simulation
     sim.prob <- vector()
     for (j in 1:nrow(rsims)){
@@ -84,6 +92,7 @@ overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col
     #plot(prob.df); abline(v=prob[i])
     test.p <- prob.df(prob)
     mean.test.p[k] <- mean(test.p)
+    setTxtProgressBar(pb, k)
   }
 
   p.out <- cbind(totestall, mean.test.p)
@@ -93,6 +102,9 @@ overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col
 
 
   #hv2 points in hv1
+
+  message("Test points from hypervolume 2 in hypervolume 1")
+  pb <- txtProgressBar(min = 0, max = nrow(pnts_hv2), style = 3)
 
   totestall <- pnts_hv2
   prob <- vector()
@@ -106,8 +118,8 @@ overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col
     #test new point against distribution
     prob <- min(mvtnorm::pmvnorm(upper = totest,sigma = tau, mean = mu),mvtnorm::pmvnorm(lower = totest,sigma = tau, mean = mu)*2)
 
-    #simulate 999 draws from multivariate dist
-    rsims <- pnts_hv1[sample(nrow(pnts_hv1), 99, replace = FALSE), ]
+    #simulate ndraws draws from multivariate dist
+    rsims <- pnts_hv1[sample(nrow(pnts_hv1), ndraws, replace = FALSE), ]
     #calculate p values for each simulation
     sim.prob <- vector()
     for (j in 1:nrow(rsims)){
@@ -120,6 +132,7 @@ overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col
     #plot(prob.df); abline(v=prob[i])
     test.p <- prob.df(prob)
     mean.test.p[k] <- mean(test.p)
+    setTxtProgressBar(pb, k)
   }
 
   p.out <- cbind(totestall, mean.test.p)

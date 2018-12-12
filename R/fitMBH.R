@@ -106,8 +106,7 @@ fitMBH <- function(x, vars, groups = NULL, nc = 3, ni = 100000, nb = 20000, nt =
 
     #iterations to use
 
-    zm <- rjags::coda.samples(jm, variable.names = params, n.iter = ni, thin = nt, progress.bar = "none")
-    zj <- rjags::jags.samples(jm, variable.names = params, n.iter = ni, thin = nt, progress.bar = "none")
+    zj <- rjags::jags.samples(jm, variable.names = params, n.iter = ni, thin = nt, progress.bar = "text")
 
     tau <- solve(summary(zj$tau, FUN = mean)$stat)
     mu <- summary(zj$mu, FUN = mean)$stat
@@ -234,8 +233,7 @@ fitMBH <- function(x, vars, groups = NULL, nc = 3, ni = 100000, nb = 20000, nt =
     #iterations to use
     rjags::load.module("dic")
 
-    zm <- rjags::coda.samples(jm, variable.names = params, n.iter = ni, thin = nt, progress.bar = "none")
-    zj <- rjags::jags.samples(jm, variable.names = params, n.iter = ni, thin = nt, progress.bar = "none")
+    zj <- rjags::jags.samples(jm, variable.names = params, n.iter = ni, thin = nt, progress.bar = "text")
 
     tau <- solve(summary(zj$tau, FUN = mean)$stat)
     mu <- summary(zj$mu, FUN = mean)$stat

@@ -4,10 +4,11 @@
 #'
 #' @param hv Fitted MBH model
 #' @param newdat New data to test probability of inclusion in the hypervolume
+#' @param ndraws Number of draws from multivariate distribution against which to test new data. Defaults to 999
 #' @return Returns newdat with an additional column corresponding to probability of inclusion in the hypervolume
 #' @export
 
-inclMBH <- function(hv, newdat){
+inclMBH <- function(hv, newdat, ndraws = 999){
 
 
   #extract volume
@@ -37,6 +38,7 @@ inclMBH <- function(hv, newdat){
   #generate random points from hypervolume
   pnts_hv <- mvtnorm::rmvnorm(round(vol1), mean1, cov1, method = "eigen")
 
+  pb <- txtProgressBar(min = 0, max = nrow(newvars), style = 3)
 
   #test inclusion of new points
   totestall <- newvars
@@ -51,8 +53,8 @@ inclMBH <- function(hv, newdat){
     #test new point against distribution
     prob <- min(mvtnorm::pmvnorm(upper = totest,sigma = tau, mean = mu),mvtnorm::pmvnorm(lower = totest,sigma = tau, mean = mu)*2)
 
-    #simulate 99 draws from multivariate dist (for speed)
-    rsims <- pnts_hv[sample(nrow(pnts_hv), 99, replace = FALSE), ]
+    #simulate ndraws draws from multivariate dist (for speed)
+    rsims <- pnts_hv[sample(nrow(pnts_hv), ndraws, replace = FALSE), ]
     #calculate p values for each simulation
     sim.prob <- vector()
     for (j in 1:nrow(rsims)){
@@ -65,6 +67,7 @@ inclMBH <- function(hv, newdat){
     #plot(prob.df); abline(v=prob[i])
     test.p <- prob.df(prob)
     mean.test.p[k] <- mean(test.p)
+    setTxtProgressBar(pb, k)
   }
 
   p.out <- cbind(totestall, mean.test.p)
