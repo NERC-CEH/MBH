@@ -14,11 +14,13 @@
 #' @return volume - Estimated hypervolume size
 #' @return group_means - Estimated group means
 #' @return group_variances - Estimated between-group variances for each variable
+#' @return samples - The output from the jags.samples function
+#' @details To use the coda package for mcmc diagnostics, you first need to convert the samples to mcmc.list format. This can be completed with the as.mcmc.list function from the mcmcr package. To inspect the mcmc chains for the estimated covariance matrix use plot(as.mcmc.list(m3$samples$tau))
 #' @export
 
 
 
-fitMBH <- function(x, vars, groups = NULL, nc = 3, ni = 100000, nb = 20000, nt = 20){
+fitMBH <- function(x, vars = c("V1", "V2", "V3"), groups = "Group", nc = 3, ni = 100000, nb = 20000, nt = 20){
 
 
   if(any(!vars %in% colnames(x))){stop("Variable names not found in data")}
@@ -255,7 +257,7 @@ fitMBH <- function(x, vars, groups = NULL, nc = 3, ni = 100000, nb = 20000, nt =
     volume <- 2/ndims * (pi^(ndims/2))/factorial((ndims/2)-1) * prod(ax)
 
 
-    outlist <- list("means" = mu, "covariance" = tau, "volume" = volume, "group_means" = mu1, "group_variances" = tau1, "Y" = Y, "dimensions" = vars)
+    outlist <- list("means" = mu, "covariance" = tau, "volume" = volume, "group_means" = mu1, "group_variances" = tau1, "Y" = Y, "dimensions" = vars, "samples" = zj)
 
 
 

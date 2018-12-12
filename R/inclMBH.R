@@ -36,7 +36,7 @@ inclMBH <- function(hv, newdat, ndraws = 999){
   newvars <- newdat[,varnames1]
 
   #generate random points from hypervolume
-  pnts_hv <- mvtnorm::rmvnorm(round(vol1), mean1, cov1, method = "eigen")
+  pnts_hv <- mvtnorm::rmvnorm(max(round(vol1),ndraws), mean1, cov1, method = "eigen")
 
   pb <- txtProgressBar(min = 0, max = nrow(newvars), style = 3)
 
