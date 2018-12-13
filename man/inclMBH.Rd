@@ -4,12 +4,14 @@
 \alias{inclMBH}
 \title{inclMBH}
 \usage{
-inclMBH(hv, newdat)
+inclMBH(hv, newdat, ndraws = 999)
 }
 \arguments{
 \item{hv}{Fitted MBH model}
 
 \item{newdat}{New data to test probability of inclusion in the hypervolume}
+
+\item{ndraws}{Number of draws from multivariate distribution against which to test new data. Defaults to 999}
 }
 \value{
 Returns newdat with an additional column corresponding to probability of inclusion in the hypervolume

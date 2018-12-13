@@ -5,7 +5,7 @@
 \title{overlapMBH}
 \usage{
 overlapMBH(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1, 2),
-  col1 = "black", col2 = "blue")
+  col1 = "black", col2 = "blue", proppoints = 1, ndraws = 999)
 }
 \arguments{
 \item{hv1}{Fitted MBH model}
@@ -21,9 +21,13 @@ overlapMBH(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1, 2),
 \item{col1}{Colour to use for first hypervolume}
 
 \item{col2}{Colour to use for second hypervolume}
+
+\item{proppoints}{Number of points to sample from each hypervolume calculated as a proportion of the total volume of each hypervolume. Defaults to 1 but consider reducing to reduce computation time}
+
+\item{ndraws}{Number of draws from multivariate normal used in overlap calculation. Defaults to 999. Reducing the number of draws will reduce computational time but will also reduce precision of the overlap estimate.}
 }
 \value{
-Utilises a simulation based approach to calculate overlap by simulating a number of points from each hypervolume. Returns an overlap statistic defined by total number of points shared divided by total number of points simulated. The density of points in each hypervolume is kept constant. Can be very slow for large hypervolumes.
+Utilises a simulation based approach to calculate overlap by simulating a number of points from each hypervolume. Returns an overlap statistic defined by total number of points shared divided by total number of points simulated. The density of points in each hypervolume is kept constant. Can be very slow for large hypervolumes, both proppoints and ndraws could be reduced for faster computation but larger values will give more precise estimates.
 }
 \description{
 This function calculates overlap between two hypervolumes

@@ -5,7 +5,7 @@ Authors@R: person("Susan", "Jarvis", email = "susjar@ceh.ac.uk", role = c("aut",
 Description: Package for creating model based hypervolumes from multivariate ecological data.
 Depends: R (>= 3.4.0)
 Imports: 
-  stats,graphics,car,mvtnorm,rjags,mAr,matrixcalc,sn
+  stats,utils,graphics,car,mvtnorm,rjags,mAr,matrixcalc,sn
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

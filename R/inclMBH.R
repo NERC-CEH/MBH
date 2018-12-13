@@ -38,7 +38,7 @@ inclMBH <- function(hv, newdat, ndraws = 999){
   #generate random points from hypervolume
   pnts_hv <- mvtnorm::rmvnorm(max(round(vol1),ndraws), mean1, cov1, method = "eigen")
 
-  pb <- txtProgressBar(min = 0, max = nrow(newvars), style = 3)
+  pb <- utils::txtProgressBar(min = 0, max = nrow(newvars), style = 3)
 
   #test inclusion of new points
   totestall <- newvars
@@ -67,7 +67,7 @@ inclMBH <- function(hv, newdat, ndraws = 999){
     #plot(prob.df); abline(v=prob[i])
     test.p <- prob.df(prob)
     mean.test.p[k] <- mean(test.p)
-    setTxtProgressBar(pb, k)
+    utils::setTxtProgressBar(pb, k)
   }
 
   p.out <- cbind(totestall, mean.test.p)

@@ -63,7 +63,7 @@ overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col
   #hv1 points in hv2
 
   message("Test points from hypervolume 1 in hypervolume 2")
-  pb <- txtProgressBar(min = 0, max = nrow(pnts_hv1), style = 3)
+  pb <- utils::txtProgressBar(min = 0, max = nrow(pnts_hv1), style = 3)
 
 
   totestall <- pnts_hv1
@@ -92,7 +92,7 @@ overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col
     #plot(prob.df); abline(v=prob[i])
     test.p <- prob.df(prob)
     mean.test.p[k] <- mean(test.p)
-    setTxtProgressBar(pb, k)
+    utils::setTxtProgressBar(pb, k)
   }
 
   p.out <- cbind(totestall, mean.test.p)
@@ -104,7 +104,7 @@ overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col
   #hv2 points in hv1
 
   message("Test points from hypervolume 2 in hypervolume 1")
-  pb <- txtProgressBar(min = 0, max = nrow(pnts_hv2), style = 3)
+  pb <- utils::txtProgressBar(min = 0, max = nrow(pnts_hv2), style = 3)
 
   totestall <- pnts_hv2
   prob <- vector()
@@ -132,7 +132,7 @@ overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col
     #plot(prob.df); abline(v=prob[i])
     test.p <- prob.df(prob)
     mean.test.p[k] <- mean(test.p)
-    setTxtProgressBar(pb, k)
+    utils::setTxtProgressBar(pb, k)
   }
 
   p.out <- cbind(totestall, mean.test.p)

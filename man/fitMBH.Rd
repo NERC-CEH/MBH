@@ -4,8 +4,8 @@
 \alias{fitMBH}
 \title{fitMBH}
 \usage{
-fitMBH(x, vars, groups = NULL, nc = 3, ni = 1e+05, nb = 20000,
-  nt = 20)
+fitMBH(x, vars = c("V1", "V2", "V3"), groups = "Group", nc = 3,
+  ni = 1e+05, nb = 20000, nt = 20)
 }
 \arguments{
 \item{x}{Data to fit hypervolume to}
@@ -32,7 +32,12 @@ volume - Estimated hypervolume size
 group_means - Estimated group means
 
 group_variances - Estimated between-group variances for each variable
+
+samples - The output from the jags.samples function
 }
 \description{
 This function fits modelled based or empirical hypervolumes to multivariate data
+}
+\details{
+To use the coda package for mcmc diagnostics, you first need to convert the samples to mcmc.list format. This can be completed with the as.mcmc.list function from the mcmcr package. To inspect the mcmc chains for the estimated covariance matrix use plot(as.mcmc.list(m3$samples$tau))
 }
