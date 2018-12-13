@@ -72,6 +72,8 @@ overlapMBH(hv1, hv2)
 
 ```{r}
 newdat <- simulate_dataMBH(nobs = 2, ngroups = 5, ndims = 4)
-inclMBH(hv2, newdat)
+inclMBH(hv2, newdat$data)
+plotMBH(hv2)
+points(newdat$data$V1, newdat$data$V2)
 ```
 
