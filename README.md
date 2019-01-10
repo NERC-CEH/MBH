@@ -15,8 +15,10 @@ The MBH package can be installed from Github using the `install_github` function
 install.packages("devtools") #if not already installed
 library(devtools)
 install_github("susanjarvis501/MBH")
+library(MBH)
 ```
 
+To run the models you will need to have an installation of [JAGS](http://mcmc-jags.sourceforge.net/) on your computer. 
 
 ## Examples
 
@@ -62,10 +64,10 @@ plotMBH(hv2, groupellipses = TRUE)
 
 ## Other functions
 
-`overlapMBH` can be used to estimate overlap between two hypervolumes. Note this function works by simulating a large number of points in each hypervolume and testing inclusion of each point in the other hypervolume and can be computationally demanding
+`overlapMBH` can be used to estimate overlap between two hypervolumes. Note this function works by simulating a large number of points in each hypervolume and testing inclusion of each point in the other hypervolume and can be computationally demanding.
 
 ```{r}
-overlapMBH(hv1, hv2)
+overlapMBH(hv1, hv2, ndraws = 99)
 ```
 
 `inclMBH` can be used to test the probability of inclusion of new data points in a calculated hypervolume. Note the number of dimensions and variable names must be the same

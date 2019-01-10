@@ -14,7 +14,7 @@
 #' @return Utilises a simulation based approach to calculate overlap by simulating a number of points from each hypervolume. Returns an overlap statistic defined by total number of points shared divided by total number of points simulated. The density of points in each hypervolume is kept constant. Can be very slow for large hypervolumes, both proppoints and ndraws could be reduced for faster computation but larger values will give more precise estimates.
 #' @export
 
-overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col1 = "black", col2 = "blue", proppoints = 1, ndraws = 999){
+overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col1 = "black", col2 = "blue", proppoints = 1, ndraws = 99){
 
   message("Start overlap calculation - this may take some time!")
 
@@ -57,6 +57,9 @@ overlapMBH <- function(hv1, hv2, overlap = TRUE, plot = TRUE, dims = c(1,2), col
 
   pnts_hv1 <- mvtnorm::rmvnorm(round(vol1*proppoints), mean1, cov1, method = "eigen")
   pnts_hv2 <- mvtnorm::rmvnorm(round(vol2*proppoints), mean2, cov2, method = "eigen")
+
+  if(nrow(pnts_hv2) < ndraws||nrow(pnts_hv1) < ndraws) {stop("Number of points to draw is greater than number of points simulated - either increase proppoints or decrease ndraws")}
+
 
   #check if points are in each distribution
 
