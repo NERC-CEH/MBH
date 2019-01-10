@@ -33,7 +33,7 @@ dat1 <- simulate_dataMBH(nobs = 20, ngroups = 5, ndims = 4)
 
 #fit empirical hypervolume ignoring groups
 
-hv1 <- fitMBH(dat1$data, groups = NULL)
+hv1 <- fitMBH(dat1$data, groups = NULL, vars = c("V1", "V2", "V3", "V4"))
 
 #plot hypervolume
 
@@ -48,7 +48,7 @@ Hypervolumes are fitted including a random effect for group.
 ```{r}
 #fit model-based hypervolume
 
-hv2 <- fitMBH(dat1$data, groups = "Group")
+hv2 <- fitMBH(dat1$data, groups = "Group", vars = c("V1", "V2", "V3", "V4"))
 
 #plot hypervolume
 
