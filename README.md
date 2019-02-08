@@ -3,6 +3,9 @@ title: "README"
 output: html_document
 ---
 
+[![DOI](https://zenodo.org/badge/161477972.svg)](https://zenodo.org/badge/latestdoi/161477972)
+
+
 ## MBH - model based hypervolumes
 
 This package can be used to construct empirical and model-based hypervolumes to produce hypervolumes of structured or nested ecological data. 
