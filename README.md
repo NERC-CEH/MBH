@@ -67,7 +67,7 @@ plotMBH(hv2, groupellipses = TRUE)
 `overlapMBH` can be used to estimate overlap between two hypervolumes. Note this function works by simulating a large number of points in each hypervolume and testing inclusion of each point in the other hypervolume and can be computationally demanding.
 
 ```{r}
-overlapMBH(hv1, hv2, ndraws = 99)
+overlapMBH(hv1, hv2, ndraws = 99, proppoints = 0.1)
 ```
 
 `inclMBH` can be used to test the probability of inclusion of new data points in a calculated hypervolume. Note the number of dimensions and variable names must be the same

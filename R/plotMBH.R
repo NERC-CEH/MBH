@@ -1,6 +1,6 @@
 #' plotMBH
 #'
-#' This calculates the probability of inclusion of new data into a calculated hypervolume
+#' This plots the modelled hypervolume
 #'
 #' @param x Fitted MBH model
 #' @param dims Which two dimensions to plot
@@ -10,7 +10,7 @@
 #' @param cols Colours to plot groups
 #' @export
 
-plotMBH <- function(x, dims = c(1,2), groupellipses = FALSE, xlim = c(-10,10), ylim = c(-15,15), cols = c("blue", "green", "orange", "purple")){
+plotMBH <- function(x, dims = c(1,2), groupellipses = FALSE, xlim = NULL, ylim = NULL, cols = c("blue", "green", "orange", "purple")){
 
 
   #extract data, means, covariance and variable names from the fitMBH object
@@ -24,11 +24,19 @@ plotMBH <- function(x, dims = c(1,2), groupellipses = FALSE, xlim = c(-10,10), y
   d2 <- dims[2]
 
 
+
+
   #plot fitted model if no groups are present
   if(is.null(x$group_means)){
     if(groupellipses == TRUE) {stop("No groups in fitMBH object to show")}
 
     nobs <- nrow(Y)
+
+    #define xlim and ylim
+
+    if(is.null(xlim)){xlim <- c(range(Y[,d1])[1] - sd(Y[,d1]), range(Y[,d1])[2] + sd(Y[,d1]))}
+
+    if(is.null(ylim)){ylim <- c(range(Y[,d2])[1] - sd(Y[,d2]), range(Y[,d2])[2] + sd(Y[,d2]))}
 
     graphics::plot(Y[,d1], Y[,d2], type = "p", xlim = xlim, ylim = ylim, cex.axis = 1.5, cex.lab = 1.5, ylab = varnames[d2], xlab = varnames[d1], pch = 20, col = cols, cex = 2)
 
@@ -46,13 +54,19 @@ plotMBH <- function(x, dims = c(1,2), groupellipses = FALSE, xlim = c(-10,10), y
         ngroups <- dim(Y)[2]
         nobs <- nrow(Y2)
 
+        #define xlim and ylim
+
+        if(is.null(xlim)){xlim <- c(range(Y2[,d1], na.rm = TRUE)[1] - sd(Y2[,d1], na.rm = TRUE), range(Y2[,d1], na.rm = TRUE)[2] + sd(Y2[,d1], na.rm = TRUE))}
+
+        if(is.null(ylim)){ylim <- c(range(Y2[,d2], na.rm = TRUE)[1] - sd(Y2[,d2], na.rm = TRUE), range(Y2, na.rm = TRUE)[2] + sd(Y2[,d2], na.rm = TRUE))}
+
         graphics::plot(Y2[,d1], Y2[,d2], type = "n", xlim = xlim, ylim = ylim, cex.axis = 1.5, cex.lab = 1.5, ylab = varnames[d2], xlab = varnames[d1])
 
           for (j in 1:ngroups){
           graphics::points(Y[,j,d1], Y[,j,d2], col = cols[j], pch = 20, cex = 2)
           }
 
-        car::ellipse(c(mean(Y2[,d1]), mean(Y2[,d2])),shape = tau[c(d1,d2), c(d1,d2)],radius = sqrt(2 * stats::qf(.95, 2, nobs)), col = "black", lty = 2)#all data
+        car::ellipse(c(mean(Y2[,d1], na.rm = TRUE), mean(Y2[,d2], na.rm = TRUE)),shape = tau[c(d1,d2), c(d1,d2)],radius = sqrt(2 * stats::qf(.95, 2, nobs)), col = "black", lty = 2)#all data
 
         }
 
@@ -63,6 +77,13 @@ plotMBH <- function(x, dims = c(1,2), groupellipses = FALSE, xlim = c(-10,10), y
         ngroups <- dim(Y)[2]
         nobs <- dim(Y)[1]
 
+        #define xlim and ylim
+
+        if(is.null(xlim)){xlim <- c(range(Y2[,d1], na.rm = TRUE)[1] - sd(Y2[,d1], na.rm = TRUE), range(Y2[,d1], na.rm = TRUE)[2] + sd(Y2[,d1], na.rm = TRUE))}
+
+        if(is.null(ylim)){ylim <- c(range(Y2[,d2], na.rm = TRUE)[1] - sd(Y2[,d2], na.rm = TRUE), range(Y2, na.rm = TRUE)[2] + sd(Y2[,d2], na.rm = TRUE))}
+
+
         graphics::plot(Y2[,d1], Y2[,d2], type = "n", xlim = xlim, ylim = ylim, cex.axis = 1.5, cex.lab = 1.5, ylab = varnames[d2], xlab = varnames[d1])
 
         for (j in 1:ngroups){
@@ -71,11 +92,11 @@ plotMBH <- function(x, dims = c(1,2), groupellipses = FALSE, xlim = c(-10,10), y
 
         cov <- list()
         for (j in 1:ngroups){
-          cov[[j]] <- cov(Y[,j,])
+          cov[[j]] <- cov(Y[,j,], use = "pairwise.complete.obs")
         }
 
         for (j in 1:ngroups){
-           car::ellipse(c(mean(Y[,j,d1]),mean(Y[,j,d2])),shape = cov[[j]][c(d1,d2), c(d1,d2)],radius = sqrt(2 * stats::qf(.95, 2, nobs)), col = cols[j])
+           car::ellipse(c(mean(Y[,j,d1], na.rm = TRUE),mean(Y[,j,d2], na.rm = TRUE)),shape = cov[[j]][c(d1,d2), c(d1,d2)],radius = sqrt(2 * stats::qf(.95, 2, nobs)), col = cols[j])
         }
 
       }
